@@ -70,31 +70,50 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
     }
   };
   return (
-    <div>
-      <form onSubmit={handleOnSubmit} className="bg-pink-500	">
-        <input
-          className="text-black border rounded-md border-black m-2 focus:ring-2 outline-none px-2"
-          type="text"
-          id="name"
-          name="name"
-          onChange={handleChange}
-        />
-        {error.name && (
-          <div className="error-message text-red-500">{error.name}</div>
-        )}
-        <br />
-        <input
-          className="border rounded-md border-black m-2"
-          type="file"
-          accept="image/*"
-          name="image"
-          onChange={handleUploadFile}
-        />
-        {error.image && (
-          <div className="error-message text-red-500">{error.image}</div>
-        )}
-        <br />
-        <button className=" mt-3 border rounded-md border-slate-700 p-1 bg-slate-300 text-black">
+    <div className="p-6">
+      <form
+        onSubmit={handleOnSubmit}
+        className="bg-white shadow-md rounded-lg p-5"
+      >
+        <div className="mb-4">
+          <label
+            htmlFor="name"
+            className="block text-gray-700 font-medium mb-2"
+          >
+            Name:
+          </label>
+          <input
+            className="border border-gray-400 rounded-md w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            type="text"
+            id="name"
+            name="name"
+            onChange={handleChange}
+          />
+          {error.name && (
+            <div className="text-sm text-red-500 mt-1">{error.name}</div>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="image"
+            className="block text-gray-700 font-medium mb-2"
+          >
+            Image:
+          </label>
+          <input
+            className="border border-gray-400 rounded-md w-full p-2"
+            type="file"
+            accept="image/*"
+            name="image"
+            onChange={handleUploadFile}
+          />
+          {error.image && (
+            <div className="text-sm text-red-500 mt-1">{error.image}</div>
+          )}
+        </div>
+
+        <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md mt-4 w-full">
           Add
         </button>
       </form>

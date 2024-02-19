@@ -78,7 +78,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
 
       <label htmlFor="image">Image:</label>
       {selectedUser.image ? (
-          <div className="relative">
+        <div className="relative">
           <button className="absolute bg-red-500" onClick={handleRemoveFile}>
             &times;
           </button>
@@ -95,7 +95,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
       )}
       <br />
 
-      <button>Update</button>
+      <button className="bg-red-500">Update</button>
     </form>
   );
 };

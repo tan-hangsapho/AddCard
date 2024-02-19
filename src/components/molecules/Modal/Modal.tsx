@@ -1,45 +1,52 @@
 import FloatingButton from "@/components/atoms/Button/FloatingButton";
-import { motion } from "framer-motion";
 import React, { ReactNode, useState } from "react";
-interface ModalProps {
+
+interface PopupProps {
   children?: ReactNode;
-  selectCard: string;
 }
-const Modal: React.FC<ModalProps> = ({ children, selectCard }) => {
-  const [isShowModal, setIsShowModal] = useState(false);
+
+const Modal: React.FC<PopupProps> = ({ children }) => {
+  const [isShowPopup, setIsShowPopup] = useState(false);
 
   return (
-    <>
+    <div className="container">
       <FloatingButton
-        onClick={() => setIsShowModal(true)}
+        onClick={() => setIsShowPopup(true)}
         position="bottom-right"
       >
-        {selectCard ? "-" : "+"}
+        +
       </FloatingButton>
-      {isShowModal && (
+
+      {isShowPopup && (
         <>
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{
-              x: 0,
-            }}
-            exit={{
-              x: "100%",
-            }}
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-            className="fixed  text-white shadow-lg top-0 right-0 w-full max-w-sm h-screen p-5"
+          <div
+            className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 max-w-sm w-9/12  p-5 rounded-lg ${
+              isShowPopup ? "block" : "hidden"
+            }`}
+            onClick={() => setIsShowPopup(false)}
           >
-            <button
-              onClick={() => setIsShowModal((sideBar) => !sideBar)}
-              className="bg-white text-black h-8 w-8 block mb-2 rounded-full"
+            <div
+              className="popup-content relative"
+              onClick={(e) => e.stopPropagation()}
             >
-              &times;
-            </button>
-            <div>{children}</div>
-          </motion.div>
+              <button
+                onClick={() => setIsShowPopup(false)}
+                className="absolute top-3 right-3 bg-gray-200 h-8 w-8 rounded-full text-black hover:bg-gray-300"
+              >
+                &times;
+              </button>
+              <div className="mt-4">{children}</div>
+            </div>
+          </div>
+
+          <div
+            className="fixed inset-0 z-40 bg-black opacity-50"
+            onClick={() => setIsShowPopup(false)}
+          />
         </>
       )}
-    </>
+    </div>
   );
 };
+
 export default Modal;

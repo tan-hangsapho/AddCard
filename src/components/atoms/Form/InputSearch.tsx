@@ -19,12 +19,12 @@ const InputSearch: React.FC<InputProps> = ({
     onSearch(e.target.value); // Call onSearch with the new search query
   };
   return (
-    <div>
+    <div className="flex justify-center items-center mt-6">
       <input
         id={id}
         type={type}
         name={name}
-        className="outline-none border-2 w-[300px] h-[40px] p-4 rounded-md focus:ring-green-200"
+        className="outline-none border border-gray-300 w-[300px] h-[40px] p-4 rounded-lg shadow-sm transition-shadow focus:outline-none focus:ring-2 focus:ring-green-500" // Styles directly here
         placeholder={placeholder}
         onChange={handleChange}
       />
