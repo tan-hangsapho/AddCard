@@ -1,4 +1,5 @@
 import { User } from "@/app/page";
+import { userSchema } from "@/components/validation/schema";
 import React, { useState } from "react";
 interface FormAddProps {
   addNewUser: (user: User) => void;
@@ -9,16 +10,41 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
     name: "",
     image: null,
   });
-
-  console.log(user);
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [error, setError] = useState({
+    name: "",
+    image: "",
+  });
+  const validateForm = async (name, value) => {
+    try {
+      await userSchema.validateAt(name, { [name]: value });
+      setError((prev) => ({ ...prev, [name]: "" })); // Clear error on success
+    } catch (error) {
+      console.log("Error: ", error);
+      setError((prev) => ({ ...prev, [name]: error.message }));
+    }
+  };
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newId = Math.random().toString(36).substring(2, 8); // return 1f74e
-    const newUser = { ...user, id: newId };
+    if (error.image) {
+      return;
+    }
+    try {
+      await userSchema.validate(user, { abortEarly: false });
 
-    addNewUser((prevUsers) => {
-      return [...prevUsers, newUser];
-    });
+      const newId = Math.random().toString(36).substring(2, 8); // return 1f74e
+      const newUser = { ...user, id: newId };
+      addNewUser((prevUsers) => {
+        return [...prevUsers, newUser];
+      });
+    } catch (error) {
+      console.error("Error:", e);
+      const Errors = {};
+      error.inner.forEach((err) => {
+        Errors[err.path] = err.message;
+      });
+      setError(Errors);
+      return;
+    }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,9 +54,11 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
         [name]: value,
       };
     });
+    validateForm(name, value);
   };
   const handleUploadFile = (e: React.FormEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
+    validateForm(e.target.name, file);
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setUser((prevUser) => {
@@ -43,7 +71,7 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
   };
   return (
     <div>
-      <form onSubmit={handleOnSubmit}>
+      <form onSubmit={handleOnSubmit} className="bg-pink-500	">
         <input
           className="text-black border rounded-md border-black m-2 focus:ring-2 outline-none px-2"
           type="text"
@@ -51,7 +79,9 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
           name="name"
           onChange={handleChange}
         />
-
+        {error.name && (
+          <div className="error-message text-red-500">{error.name}</div>
+        )}
         <br />
         <input
           className="border rounded-md border-black m-2"
@@ -60,7 +90,9 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
           name="image"
           onChange={handleUploadFile}
         />
-
+        {error.image && (
+          <div className="error-message text-red-500">{error.image}</div>
+        )}
         <br />
         <button className=" mt-3 border rounded-md border-slate-700 p-1 bg-slate-300 text-black">
           Add

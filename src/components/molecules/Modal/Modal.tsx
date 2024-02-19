@@ -27,7 +27,7 @@ const Modal: React.FC<ModalProps> = ({ children, selectCard }) => {
               x: "100%",
             }}
             transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-            className="fixed bg-red-500 text-white shadow-lg top-0 right-0 w-full max-w-sm h-screen p-5"
+            className="fixed  text-white shadow-lg top-0 right-0 w-full max-w-sm h-screen p-5"
           >
             <button
               onClick={() => setIsShowModal((sideBar) => !sideBar)}

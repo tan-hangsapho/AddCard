@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, FormAdd, Modal, UpdateForm } from "@/components";
+import { Card, FormAdd, InputSearch, Modal, UpdateForm } from "@/components";
 import { CardList } from "@/components/atoms/Card/CardList";
 import React, { useState } from "react";
 
@@ -12,19 +12,37 @@ export interface User {
 export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
   const [selectCard, setSelectCard] = useState("");
+
   const selectedUser = users.filter((user) => {
     if (user.id === selectCard) {
       return user;
     }
   });
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+  };
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   const handleDeleteCard = (id: string) => {
     const deleteItem = users.filter((users) => users.id !== id);
     setUsers(deleteItem);
   };
+
   return (
     <>
+      <InputSearch
+        type={"text"}
+        name={"search"}
+        id={"search"}
+        onSearch={handleSearchQueryChange }
+        placeholder="Search"
+      />
       <CardList
-        items={users}
+        items={filteredUsers}
         selectCard={selectCard}
         onSelectCard={setSelectCard}
         onDeleteCard={handleDeleteCard}
