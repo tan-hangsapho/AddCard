@@ -1,6 +1,6 @@
 import { User } from "@/app/page";
-import { userSchema } from "@/components/validation/schema";
-import React, { useState } from "react";
+import { userSchema } from "@/validation/schema";
+import React, { useRef, useState } from "react";
 interface FormAddProps {
   addNewUser: (user: User) => void;
 }
@@ -8,12 +8,13 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
   const [user, setUser] = useState({
     id: "",
     name: "",
-    image: null,
+    image: "",
   });
   const [error, setError] = useState({
     name: "",
     image: "",
   });
+
   const validateForm = async (name, value) => {
     try {
       await userSchema.validateAt(name, { [name]: value });
@@ -33,6 +34,7 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
 
       const newId = Math.random().toString(36).substring(2, 8); // return 1f74e
       const newUser = { ...user, id: newId };
+
       addNewUser((prevUsers) => {
         return [...prevUsers, newUser];
       });
@@ -87,6 +89,7 @@ const FormAdd: React.FC<FormAddProps> = ({ addNewUser }) => {
             type="text"
             id="name"
             name="name"
+            placeholder="Enter name"
             onChange={handleChange}
           />
           {error.name && (
